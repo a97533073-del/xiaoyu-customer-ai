@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071614" />
+  <title>小嶼客服 AI｜台灣口吻即時客服</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="ambient ambient-three"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="小嶼客服 AI 首頁">
+      <span class="brand-mark">嶼</span>
+      <span>
+        <strong>小嶼客服 AI</strong>
+        <small>台灣口吻・即時對話・雲端知識庫</small>
+      </span>
+    </a>
+    <div class="top-actions">
+      <span class="secure-pill"><span></span>Key 僅存雲端</span>
+      <button class="ghost-button" id="openAdmin">管理知識庫</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero-panel">
+      <div class="hero-copy">
+        <div class="eyebrow">REALTIME CUSTOMER EXPERIENCE</div>
+        <h1>讓客服看起來<br><em>像品牌的一部分。</em></h1>
+        <p>這不是單純的聊天框，而是一個帶有品牌質感、台灣口吻與即時互動能力的 AI 客服入口。打字、語音、知識庫與產品管理，都整合在同一個頁面裡。</p>
+        <div class="feature-row">
+          <span>繁體中文</span>
+          <span>台灣用語</span>
+          <span>即時語音</span>
+          <span>可擴充產品資料</span>
+        </div>
+      </div>
+
+      <div class="hero-showcase">
+        <div class="showcase-glow"></div>
+        <div class="showcase-card spotlight-card">
+          <div class="spotlight-top">
+            <div>
+              <span class="mini-label">SERVICE HIGHLIGHT</span>
+              <h2>品牌化客服體驗</h2>
+            </div>
+            <span class="count-badge">MVP</span>
+          </div>
+          <p>適合台灣保健品、電商、直播導購與私域客服，介面更乾淨、細節更完整，也更適合直接拿去展示或二次開發。</p>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <strong>&lt; 2s</strong>
+              <span>文字回覆目標</span>
+            </div>
+            <div class="metric-card">
+              <strong>24 / 7</strong>
+              <span>全天候服務</span>
+            </div>
+            <div class="metric-card">
+              <strong>1 個入口</strong>
+              <span>文字＋語音＋知識庫</span>
+            </div>
+          </div>
+          <div class="showcase-flow">
+            <div class="flow-step"><b>01</b><span>客戶提問</span></div>
+            <div class="flow-line"></div>
+            <div class="flow-step"><b>02</b><span>知識檢索</span></div>
+            <div class="flow-line"></div>
+            <div class="flow-step"><b>03</b><span>台灣口吻回覆</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <section class="chat-card">
+        <div class="chat-header">
+          <div class="agent">
+            <div class="avatar">嶼<span class="online-dot"></span></div>
+            <div>
+              <strong>小嶼客服</strong>
+              <small id="connectionStatus">文字客服已就緒</small>
+            </div>
+          </div>
+          <div class="chat-header-actions">
+            <span class="status-chip">客服在線中</span>
+            <div class="latency"><span class="pulse"></span><b id="latencyValue">低延遲</b></div>
+          </div>
+        </div>
+
+        <div class="chat-subhead">
+          <div class="subhead-card">
+            <span class="mini-label">LIVE CHAT</span>
+            <p>這裡可以直接模擬顧客詢問產品、價格、物流與用法。</p>
+          </div>
+          <div class="subhead-card muted-card">
+            <span class="mini-label">VOICE READY</span>
+            <p>點擊麥克風後，系統會切換成即時語音客服模式。</p>
+          </div>
+        </div>
+
+        <div class="messages" id="messages" aria-live="polite"></div>
+
+        <div class="quick-actions" id="quickActions">
+          <button>這款產品怎麼吃？</button>
+          <button>主要成分有哪些？</button>
+          <button>現在多少錢？</button>
+          <button>多久可以送到？</button>
+        </div>
+
+        <div class="composer-wrap">
+          <div class="composer">
+            <button class="voice-button" id="voiceButton" title="開始語音客服" aria-label="開始語音客服">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a1 1 0 1 1 2 0 7 7 0 0 1-6 6.92V20h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.08A7 7 0 0 1 5 11a1 1 0 1 1 2 0 5 5 0 0 0 10 0Z"/></svg>
+            </button>
+            <textarea id="messageInput" rows="1" placeholder="輸入客戶問題，或按麥克風直接說話…"></textarea>
+            <button class="send-button" id="sendButton" aria-label="送出訊息">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.4 20.4 17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a1 1 0 0 0-1.35 1.16L3.8 11H12a1 1 0 1 1 0 2H3.8l-1.75 6.24A1 1 0 0 0 3.4 20.4Z"/></svg>
+            </button>
+          </div>
+          <div class="voice-hint" id="voiceHint">按一下麥克風開始即時語音，客戶說完後就能自然接續回覆。</div>
+        </div>
+      </section>
+
+      <aside class="knowledge-card">
+        <div class="knowledge-head">
+          <div>
+            <span class="mini-label">KNOWLEDGE BASE</span>
+            <h2>產品與規則</h2>
+          </div>
+          <span class="count-badge" id="productCount">0 個產品</span>
+        </div>
+
+        <div class="side-summary">
+          <div class="summary-block">
+            <strong>產品知識</strong>
+            <span>可儲存成分、價格、用法與物流資訊</span>
+          </div>
+          <div class="summary-block">
+            <strong>客服邏輯</strong>
+            <span>資料不足時不亂猜，特殊問題自動轉人工</span>
+          </div>
+        </div>
+
+        <div id="productList" class="product-list"></div>
+
+        <div class="policy-box">
+          <strong>安全規則已開啟</strong>
+          <p>不亂猜價格、不做醫療診斷，退款、投訴與特殊案例一律建議轉人工。</p>
+        </div>
+
+        <div class="journey-box">
+          <div class="journey-item"><b>1</b><span>新增產品資料</span></div>
+          <div class="journey-item"><b>2</b><span>顧客提問</span></div>
+          <div class="journey-item"><b>3</b><span>AI 根據知識庫回覆</span></div>
+        </div>
+
+        <button class="primary-wide" id="openAdminBottom">＋ 用對話新增產品</button>
+      </aside>
+    </section>
+
+    <section class="bottom-note">
+      <div class="bottom-card">
+        <span class="mini-label">READY TO SCALE</span>
+        <h3>後續可直接擴充</h3>
+        <p>下一步可接入 GPT Live、資料庫、後台登入與 LINE / Facebook / WhatsApp。這一版先把視覺與體驗打磨得更完整，方便你先展示、先測試、先收需求。</p>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="adminDialog">
+    <form method="dialog" class="dialog-shell" id="adminForm">
+      <div class="dialog-header">
+        <div>
+          <span class="mini-label">ADMIN</span>
+          <h2>產品知識庫</h2>
+          <p>目前版本保存在這個瀏覽器，之後可接雲端資料庫讓所有客戶共用。</p>
+        </div>
+        <button class="close-button" value="cancel" aria-label="關閉">×</button>
+      </div>
+
+      <div class="admin-grid">
+        <section>
+          <label for="productDescription">用自然語言新增產品</label>
+          <textarea id="productDescription" class="large-textarea" placeholder="例如：產品叫做……，一盒價格……，主要成分……，一天……，台灣出貨約……"></textarea>
+          <button type="button" class="primary-wide" id="addProductButton">AI 整理並加入</button>
+          <div class="helper">缺少的資料會標記為「待設定」，不會自行編造。</div>
+        </section>
+        <section>
+          <label for="knowledgeEditor">完整 JSON 資料</label>
+          <textarea id="knowledgeEditor" class="code-editor" spellcheck="false"></textarea>
+          <div class="editor-actions">
+            <button type="button" class="secondary-button" id="resetKnowledge">恢復示範資料</button>
+            <button type="button" class="primary-button" id="saveKnowledge">儲存知識庫</button>
+          </div>
+        </section>
+      </div>
+      <div class="toast" id="adminToast" role="status"></div>
+    </form>
+  </dialog>
+
+  <audio id="remoteAudio" autoplay></audio>
+  <script src="./app.js"></script>
+</body>
+</html>
