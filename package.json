@@ -1,0 +1,11 @@
+{
+  "name": "taiwan-customer-ai",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Low-latency Taiwanese Mandarin customer-service web app powered by OpenAI Realtime.",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}
