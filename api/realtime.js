@@ -1,5 +1,40 @@
 import { baseInstructions, readBody, sanitizeKnowledge } from "../lib/shared.js";
-import { buildRealtimeMultipart, parseOpenAIError } from "../lib/realtime.js";
+
+function buildMultipartBody(sdp, session) {
+  const boundary = `----xiaoyu-realtime-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  const crlf = "\r\n";
+
+  const body = Buffer.concat([
+    Buffer.from(
+      `--${boundary}${crlf}` +
+      `Content-Disposition: form-data; name="sdp"; filename="offer.sdp"${crlf}` +
+      `Content-Type: application/sdp${crlf}${crlf}`,
+      "utf8"
+    ),
+    Buffer.from(sdp, "utf8"),
+    Buffer.from(
+      `${crlf}--${boundary}${crlf}` +
+      `Content-Disposition: form-data; name="session"${crlf}` +
+      `Content-Type: application/json${crlf}${crlf}`,
+      "utf8"
+    ),
+    Buffer.from(JSON.stringify(session), "utf8"),
+    Buffer.from(`${crlf}--${boundary}--${crlf}`, "utf8")
+  ]);
+
+  return {
+    body,
+    contentType: `multipart/form-data; boundary=${boundary}`
+  };
+}
+
+function readOpenAIError(raw, fallback = "建立語音連線失敗") {
+  try {
+    return JSON.parse(raw)?.error?.message || fallback;
+  } catch {
+    return raw?.trim()?.slice(0, 500) || fallback;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -24,11 +59,9 @@ export default async function handler(req, res) {
     instructions: `${baseInstructions(sanitizeKnowledge(body.knowledge))}\n\n【語音表現】使用自然的台灣國語口吻，聲音溫和、有精神，語速略快但清楚。先直接回答，再問一個必要的問題。`,
     audio: {
       input: {
-        noise_reduction: {
-          type: process.env.OPENAI_REALTIME_NOISE_REDUCTION || "far_field"
-        },
+        noise_reduction: { type: "near_field" },
         transcription: {
-          model: process.env.OPENAI_TRANSCRIBE_MODEL || "gpt-4o-mini-transcribe",
+          model: "gpt-4o-mini-transcribe",
           language: "zh",
           prompt: "台灣繁體中文電商客服對話，可能包含產品名稱、成分、價格與物流。"
         },
@@ -49,19 +82,20 @@ export default async function handler(req, res) {
   };
 
   try {
-    const multipart = buildRealtimeMultipart(body.sdp, session);
+    const multipart = buildMultipartBody(body.sdp, session);
+
     const response = await fetch("https://api.openai.com/v1/realtime/calls", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         Accept: "application/sdp",
-        "Content-Type": multipart.contentType,
-        "Content-Length": multipart.contentLength
+        "Content-Type": multipart.contentType
       },
       body: multipart.body
     });
 
     const answerSdp = await response.text();
+
     if (!response.ok) {
       console.error("OpenAI Realtime create-call error", {
         status: response.status,
@@ -69,13 +103,12 @@ export default async function handler(req, res) {
         body: answerSdp.slice(0, 1000)
       });
       return res.status(response.status).json({
-        error: parseOpenAIError(answerSdp),
+        error: readOpenAIError(answerSdp),
         code: "OPENAI_REALTIME_CREATE_CALL_FAILED"
       });
     }
 
-    if (!answerSdp.startsWith("v=")) {
-      console.error("Unexpected Realtime SDP response", answerSdp.slice(0, 500));
+    if (!answerSdp.trim().startsWith("v=")) {
       return res.status(502).json({ error: "OpenAI 沒有回傳有效的語音連線資料，請稍後再試。" });
     }
 
